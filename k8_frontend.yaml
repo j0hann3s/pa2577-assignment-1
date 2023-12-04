@@ -1,0 +1,39 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quotes-frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: quotes-frontend
+  template:
+    metadata:
+      labels:
+        app: quotes-frontend
+    spec:
+      containers:
+      - name: quotes-frontend
+        image: unison9302/school_stuff:frontend-v2.0
+        ports:
+        - containerPort: 5000
+        env:
+        - name: BACKEND_URI
+          value: "http://quotes-backend-service:5000"
+        - name: EXTERNAL_BROWSER_URI
+          value: "http://10.110.178.141:5000"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: quotes-frontend-service
+spec:
+  selector:
+    app: quotes-frontend
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5000
+  type: LoadBalancer
+---

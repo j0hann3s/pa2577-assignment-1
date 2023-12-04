@@ -1,0 +1,8 @@
+FROM alpine:latest
+EXPOSE 5000
+WORKDIR /opt/
+RUN apk add python3 py-pip
+ADD requirements.txt .
+RUN pip install -r requirements.txt
+ADD quotes_backend.py .
+ENTRYPOINT python quotes_backend.py

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Quotes</title>
+</head>
+
+<body>
+    <form action={{top_page}}>
+        <button type="submit" style="position: absolute; top: 0; right: 0; font-size: x-large;">Top Quotes</button>
+    </form>
+    <div style="position: absolute; display: flex; justify-content: space-around; width: 99%; top: 50%">
+        <form action={{up_link}} method="post">
+            <button type="submit" style="font-size: xx-large;">⬆</button>
+        </form>
+        <p style="font-size: xx-large; padding-left: 20px; padding-right: 20px;">{{quote}}</p>
+        <form action={{down_link}} method="post">
+            <button type="submit" style="font-size: xx-large;">⬇</button>
+        </form>
+    </div>
+</body>
+
+</html>

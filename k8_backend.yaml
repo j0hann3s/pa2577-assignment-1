@@ -1,0 +1,37 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quotes-backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: quotes-backend
+  template:
+    metadata:
+      labels:
+        app: quotes-backend
+    spec:
+      containers:
+      - name: quotes-backend
+        image: unison9302/school_stuff:backend-v2.0
+        ports:
+        - containerPort: 5000
+        env:
+        - name: MONGODB_URI
+          value: "mongodb://quotes-database-service:27017"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: quotes-backend-service
+spec:
+  selector:
+    app: quotes-backend
+  ports:
+  - protocol: TCP
+    port: 5000
+    targetPort: 5000
+  type: LoadBalancer
+---

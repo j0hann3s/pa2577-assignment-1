@@ -4,17 +4,18 @@
 # Must have minikube installed (and all other relevant tool such as kubectl etc...)
 # Only tested with Docker driver.
 
-# $ minikube start
-# (If restarting minikube, run minikube tunnel again.)
+# pkill -9 -f 'minikube tunnel' ; kubectl delete --cascade='foreground' -f k8_backend.yaml -f k8_frontend.yaml -f k8_database.yaml ; minikube stop ; exit
 
-pkill -9 -f 'minikube tunnel'
-nohup minikube tunnel > /dev/null 2>&1 & disown
+minikube start
 
 kubectl apply -f k8_database.yaml
 kubectl apply -f k8_backend.yaml
 kubectl apply -f k8_frontend.yaml
 
-sleep 30
+pkill -9 -f 'minikube tunnel'
+nohup minikube tunnel > /dev/null 2>&1 & disown
+
+sleep 60
 
 # Load initial data into database.
 db_addr=$(kubectl get service quotes-database-service --output=jsonpath='{.status.loadBalancer.ingress[0].ip}')
@@ -49,8 +50,3 @@ if [[ $backend_addr =~ [0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3} ]]; then
     sed -i -E "s|value: \"http://[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}:5000\"|value: \"http://$backend_addr:5000\"|g" k8_frontend.yaml
     kubectl apply -f k8_frontend.yaml
 fi
-
-# watch -n 1 kubectl get all
-# pkill -9 -f 'minikube tunnel'
-# kubectl delete --cascade='foreground' -f k8_backend.yaml -f k8_frontend.yaml -f k8_database.yaml
-# minikube stop
